@@ -1,0 +1,210 @@
+import sqlite3 as sql
+con = sql.connect('customer.db')
+cus = "create table if not exists customer_info(acc_no bigint,name varchar(30),gender varchar(8),e_mail varchar(30),acc_type varchar(9),balance bigint,active int(3),primary key(acc_no))"
+tran = "create table if not exists transaction1(acc_no bigint,t_type varchar(10),t_date date,amount int,foreign key(acc_no) references customer_info(acc_no))"
+cur = con.cursor()
+cur.execute(cus)
+cur.execute(tran)
+
+#function for making an account->
+def create_account():
+    acc_n = int(input("Enter Account no. :"))
+    name = str(input("Enter name :"))
+    print(" "*40+"Gender")
+    print(" "*35+"Press 1 for Male")
+    print(" "*35+"Press 2 for Female")
+    print(" "*35+"Press 3 for Other")
+    gender = int(input("Enter input for gender(1/2/3) :"))
+    gen = ""
+    if(gender==1):
+        gen = 'Male'
+    elif(gender==2):
+        gen = 'Female'
+    elif(gender==3):
+        gen = 'Other'
+    e_mail = str(input("Enter mail :"))
+    print(" "*30+"****Transaction Type****")
+    print(" "*30+"Press 1 for Savings")
+    print(" "*30+"Press 2 for Current")
+    acc_type = int(input("Enter input for account type(1/2) :"))
+    typ = ""
+    if(acc_type==1):
+        typ = 'Savings'
+    elif(acc_type==2):
+        typ = 'Current'
+    amount = int(input("Enter amount :"))
+    activity = 1
+    insert = "insert into customer_info values(%d,'%s','%s','%s','%s',%d,%d)"%(acc_n,name,gen,e_mail,typ,amount,activity)
+    cur.execute(insert)
+    if cur.rowcount>0:
+        print(" "*35+"!!!!!Account Created!!!!!")
+    else:
+        print(" "*40+"!!!!!Error!!!!!")
+    con.commit()
+
+# function for Withdraw->
+def withdraw():
+    acc_n = int(input("Enter account no :"))
+    t_type = 'Withdraw'
+    date = str(input("Enter date(YYYY-MM-DD) :"))
+    amount = int(input("Enter amount :"))
+    insert = "insert into transaction1 values(%d,'%s','%s',%d)"%(acc_n,t_type,date,amount)
+    cur.execute(insert)
+    qrry = "UPDATE customer_info set balance = balance-%d where (acc_no==%d)"%(amount,acc_n)
+    cur.execute(qrry)
+    if cur.rowcount>0:
+        print(" "*35+"!!!!!Transaction Completed!!!!!")
+    else:
+        print(" "*40+"!!!!!Error!!!!!")
+    con.commit()
+
+
+# function for Deposite->
+def deposite():
+    acc_n = int(input("Enter account no :"))
+    trn_type = 'Deposite'
+    date = str(input("Enter date(YYYY-MM-DD) :"))
+    amount = int(input("Enter amount :"))
+    insert = "insert into transaction1 values(%d,'%s','%s',%d)"%(acc_n,trn_type,date,amount)
+    cur.execute(insert)
+    qry = "UPDATE customer_info set balance = balance+%d where (acc_no==%d)"%(amount,acc_n)
+    cur.execute(qry)
+    if cur.rowcount>0:
+        print(" "*35+"!!!!!Transaction Completed!!!!!")
+    else:
+        print(" "*40+"!!!!!Error!!!!!")
+    con.commit()
+
+# Function for view->
+def view_rec():
+    print("-"*170)
+    print("%10s%15s\t%8s\t%20s\t%15s\t%10s\t%12s"%("Account_no","Name","Gender","E_Mail","Acc_type","Amount","Activity"))
+    print("-"*170)
+    qry = "Select * from customer_info"
+    cur.execute(qry)
+    data = cur.fetchall()
+    for i in data:
+        print("%10d%15s\t%8s\t%20s%15s\t%10d\t%12d"%(i[0],i[1],i[2],i[3],i[4],i[5],i[6]))
+    print("-"*170)
+
+# function for Balance Enquiry->
+def bal_enq():
+    acc_n = int(input("Enter account no. :"))
+    print("-"*80)
+    print("%10s\t%20s\t%10s"%("Account_no","Name","Balance"))
+    print("-"*80)
+    qry = "Select acc_no,name,balance from customer_info where(acc_no==%d)"%(acc_n)
+    cur.execute(qry)
+    data = cur.fetchall()
+    if len(data)>0:
+        for i in data:
+            print("%10d\t%20s\t%10d"%(i[0],i[1],i[2]))
+        print("-"*80)
+    else:
+        print(" "*30+"!!!!!Evaild Account Number!!!!!")
+
+
+# function for editing in account->
+def edit_acc():
+    acc_n = int(input("Enter account no. :"))
+    qry = "Select * from customer_info where(acc_no==%d)"%(acc_n)
+    cur.execute(qry)
+    data = cur.fetchall()
+    if len(data)>0:
+        print(" "*40+"1 -> Name")
+        print(" "*40+"2 -> Gender")
+        print(" "*40+"3 -> E-Mail")
+        ch = int(input("Enter choice for update :"))
+        if ch==1:
+            name = str(input("Enter name :"))
+            qry = "UPDATE customer_info set name = '%s' where(acc_no==%d)"%(name,acc_n)
+        elif ch==2:
+            gender = str(input("Enter gender(Male/Female/Other) :"))
+            qry = "UPDATE customer_info set gender = '%s' where(acc_no==%d)"%(gender,acc_n)
+        elif ch==3:
+            email = str(input("Enter E-Mail :"))
+            qry = "UPDATE customer_info set e_mail = '%s' where(acc_no==%d)"%(email,acc_n)
+        else :
+            print(" "*38+"!!!!!Invalid Choice!!!!!")
+        if ch>=1 and ch<=3:
+            cur.execute(qry)
+            if cur.rowcount>0:
+                print(" "*38+"!!!!Record Updated!!!!")
+            else:
+                print(" "*42+"!!!!!ERROR!!!!!")
+    else:
+        print(" "*32+"!!!!!Invalid Account no.!!!!!")
+    con.commit()
+
+# function for view mini statement->
+def view_st():
+    acc_n = int(input("Enter account no. :"))
+    print("Last 5 transaction of account no. :",acc_n)
+    print("-"*80)
+    print("%15s\t%15s\t%10s"%("Trans_type","Trans_date","Amount"))
+    print("-"*80)
+    qry = "Select t_type,t_date,amount from transaction1 where(acc_no==%d) order by t_date asc limit 5"%(acc_n)
+    cur.execute(qry)
+    data = cur.fetchall()
+    if len(data)>0:
+        for i in data:
+            print("%15s\t%15s\t%10d"%(i[0],i[1],i[2]))
+        print("-"*80)
+    else:
+        print(" "*32+"!!!!!Envaild Account Number!!!!!")
+
+# function for close account->
+def close_acc():
+    acc_n = int(input("Enter account no. :"))
+    qry = "UPDATE customer_info set active = 0 where (acc_no==%d)"%(acc_n)
+    cur.execute(qry)
+    if cur.rowcount>0:
+        print(" "*35+"!!!!!Account Closed!!!!!")
+    else:
+        print(" "*40+"!!!!!Envaild Account Number!!!!!")
+    con.commit()
+    
+# Main Frame
+while True:
+    print("*"*129)
+    print("-"*79+"Enter your choice"+"-"*79)
+    print(" "*65+" Enter 1 for Open a New Account.")
+    print(" "*65+" Enter 2 for Deposit Amount.")
+    print(" "*65+" Enter 3 for Withdraw Amount.")
+    print(" "*65+" Enter 4 for Balance Enquiry.")
+    print(" "*65+" Enter 5 for view all account holder.")
+    print(" "*65+" Enter 6 for Editing in account.")
+    print(" "*65+" Enter 7 for view mini statement.")
+    print(" "*65+" Enter 8 for Close an account.")
+    print(" "*65+" Enter 9 for Exit.")
+    print("*"*129)
+    print("\n")
+    print("\n")
+    choice = int(input("Enter your choice :"))
+# Choice for add new account->
+    if(choice==1):
+        create_account()
+#Choice for deposite amount->
+    elif(choice==2):
+        deposite()
+#Choice for withdraw amount->
+    elif(choice==3):
+        withdraw()
+#Choice for balance inquiry->
+    elif(choice==4):
+        bal_enq()
+#Choice for view all account holder->
+    elif(choice==5):
+        view_rec()
+#Choice for edit account details->
+    elif(choice==6):
+        edit_acc()
+#Choice for view last 5 statements->
+    elif(choice==7):
+        view_st()
+#Choice for close an account->
+    elif(choice==8):
+        close_acc()
+#Choice for close the application->
+    elif(choice==9):
+        break
