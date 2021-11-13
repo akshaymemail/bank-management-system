@@ -5,39 +5,39 @@ from database import connection
 
 
 def createNewAccount():
-    acc_n = int(input("Enter Account no. :"))
+    accountNumber = int(input("Enter Account no. :"))
     name = str(input("Enter name :"))
     print(" "*40+"Gender")
-    print(" "*35+"Press 1 for Male")
-    print(" "*35+"Press 2 for Female")
-    print(" "*35+"Press 3 for Other")
-    gender = int(input("Enter input for gender(1/2/3) :"))
-    gen = ""
+    print(" "*35+"Enter 1 for Male")
+    print(" "*35+"Enter 2 for Female")
+    print(" "*35+"Enter 3 for transgender")
+    gender = int(input("Chose your gender :"))
+    genText = ""
     if(gender == 1):
-        gen = 'Male'
+        genText = 'Male'
     elif(gender == 2):
-        gen = 'Female'
+        genText = 'Female'
     elif(gender == 3):
-        gen = 'Other'
-    e_mail = str(input("Enter mail :"))
-    print(" "*30+"****Transaction Type****")
-    print(" "*30+"Press 1 for Savings")
-    print(" "*30+"Press 2 for Current")
-    acc_type = int(input("Enter input for account type(1/2) :"))
-    typ = ""
-    if(acc_type == 1):
-        typ = 'Savings'
-    elif(acc_type == 2):
-        typ = 'Current'
+        genText = 'transgender'
+    email = str(input("Enter Your mail :"))
+    print(" "*30+"****Chose Account  Type****")
+    print(" "*30+"Enter 1 for Savings")
+    print(" "*30+"Enter 2 for Current")
+    accountType = int(input("Enter input for account type(1/2) :"))
+    accountTypeText = ""
+    if(accountType == 1):
+        accountTypeText = 'Savings'
+    elif(accountType == 2):
+        accountTypeText = 'Current'
     amount = int(input("Enter amount :"))
     activity = 1
     insert = "insert into customer_info values(%d,'%s','%s','%s','%s',%d,%d)" % (
-        acc_n, name, gen, e_mail, typ, amount, activity)
+        accountNumber, name, genText, email, accountTypeText, amount, activity)
     cur.execute(insert)
     if cur.rowcount > 0:
-        print(" "*35+"!!!!!Account Created!!!!!")
+        print(" "*35+"!!!!!Account Created Successfully!!!!!")
     else:
-        print(" "*40+"!!!!!Error!!!!!")
+        print(" "*40+"!!!!! There was an error, please try again !!!!!")
     connection.commit()
 
 # balance inquiry
