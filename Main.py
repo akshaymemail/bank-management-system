@@ -1,13 +1,13 @@
 from tables import cur
-from helpers import create_account
-from helpers import bal_enq
-from helpers import deposite
-from helpers import withdraw
-from helpers import bal_enq
-from helpers import view_rec
-from helpers import edit_acc
-from helpers import view_st
-from helpers import close_acc
+from helpers import createNewAccount
+from helpers import balanceEnquiry
+from helpers import depositeMoney
+from helpers import withdrawMoney
+from helpers import balanceEnquiry
+from helpers import viewAllAccounts
+from helpers import editAccount
+from helpers import viewStatement
+from helpers import closeAccount
 
 
 # function for view mini statement->
@@ -30,30 +30,21 @@ while True:
     print("\n")
     print("\n")
     choice = int(input("Enter your choice :"))
-# Choice for add new account->
     if(choice == 1):
-        create_account()
-# Choice for deposite amount->
+        createNewAccount()
     elif(choice == 2):
-        deposite()
-# Choice for withdraw amount->
+        depositeMoney()
     elif(choice == 3):
-        withdraw()
-# Choice for balance inquiry->
+        withdrawMoney()
     elif(choice == 4):
-        bal_enq()
-# Choice for view all account holder->
+        balanceEnquiry()
     elif(choice == 5):
-        view_rec()
-# Choice for edit account details->
+        viewAllAccounts()
     elif(choice == 6):
-        edit_acc()
-# Choice for view last 5 statements->
+        editAccount()
     elif(choice == 7):
-        view_st()
-# Choice for close an account->
+        viewStatement()
     elif(choice == 8):
-        close_acc()
-# Choice for close the application->
+        closeAccount()
     elif(choice == 9):
         break

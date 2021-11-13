@@ -4,7 +4,7 @@ from database import connection
 # To create a new bank account
 
 
-def create_account():
+def createNewAccount():
     acc_n = int(input("Enter Account no. :"))
     name = str(input("Enter name :"))
     print(" "*40+"Gender")
@@ -43,7 +43,7 @@ def create_account():
 # balance inquiry
 
 
-def bal_enq():
+def balanceEnquiry():
     acc_n = int(input("Enter account no. :"))
     print("-"*80)
     print("%10s\t%20s\t%10s" % ("Account_no", "Name", "Balance"))
@@ -62,7 +62,7 @@ def bal_enq():
 # Withdraw Money
 
 
-def withdraw():
+def withdrawMoney():
     acc_n = int(input("Enter account no :"))
     t_type = 'Withdraw'
     date = str(input("Enter date(YYYY-MM-DD) :"))
@@ -81,7 +81,7 @@ def withdraw():
 
 
 # Deposite Money to account
-def deposite():
+def depositeMoney():
     acc_n = int(input("Enter account no :"))
     trn_type = 'Deposite'
     date = str(input("Enter date(YYYY-MM-DD) :"))
@@ -100,7 +100,7 @@ def deposite():
 
 
 # view record
-def view_rec():
+def viewAllAccounts():
     print("-"*170)
     print("%10s%15s\t%8s\t%20s\t%15s\t%10s\t%12s" % ("Account_no",
           "Name", "Gender", "E_Mail", "Acc_type", "Amount", "Activity"))
@@ -115,7 +115,7 @@ def view_rec():
 
 
 # editing in account
-def edit_acc():
+def editAccount():
     acc_n = int(input("Enter account no. :"))
     qry = "Select * from customer_info where(acc_no==%d)" % (acc_n)
     cur.execute(qry)
@@ -152,7 +152,7 @@ def edit_acc():
 # view statement
 
 
-def view_st():
+def viewStatement():
     acc_n = int(input("Enter account no. :"))
     print("Last 5 transaction of account no. :", acc_n)
     print("-"*80)
@@ -172,7 +172,7 @@ def view_st():
 
 # close an account
 
-def close_acc():
+def closeAccount():
     acc_n = int(input("Enter account no. :"))
     qry = "UPDATE customer_info set active = 0 where (acc_no==%d)" % (acc_n)
     cur.execute(qry)
