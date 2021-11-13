@@ -1,4 +1,3 @@
-from tables import cur
 from helpers import createNewAccount
 from helpers import balanceEnquiry
 from helpers import depositeMoney
@@ -10,10 +9,7 @@ from helpers import viewStatement
 from helpers import closeAccount
 
 
-# function for view mini statement->
-
-
-# Main Frame
+# Runs infinite until exit or ctrl + c
 while True:
     print("*"*129)
     print("-"*79+"Enter your choice"+"-"*79)
