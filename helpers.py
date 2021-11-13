@@ -44,12 +44,12 @@ def createNewAccount():
 
 
 def balanceEnquiry():
-    acc_n = int(input("Enter account no. :"))
+    accountNumber = int(input("Enter account no. :"))
     print("-"*80)
     print("%10s\t%20s\t%10s" % ("Account_no", "Name", "Balance"))
     print("-"*80)
     qry = "Select acc_no,name,balance from customer_info where(acc_no==%d)" % (
-        acc_n)
+        accountNumber)
     cur.execute(qry)
     data = cur.fetchall()
     if len(data) > 0:
@@ -57,22 +57,22 @@ def balanceEnquiry():
             print("%10d\t%20s\t%10d" % (i[0], i[1], i[2]))
         print("-"*80)
     else:
-        print(" "*30+"!!!!!Evaild Account Number!!!!!")
+        print(" "*30+"!!!!!Invaild Account Number!!!!!")
 
 # Withdraw Money
 
 
 def withdrawMoney():
-    acc_n = int(input("Enter account no :"))
-    t_type = 'Withdraw'
+    accountNumber = int(input("Enter account no :"))
+    actionType = 'Withdraw'
     date = str(input("Enter date(YYYY-MM-DD) :"))
     amount = int(input("Enter amount :"))
     insert = "insert into transaction1 values(%d,'%s','%s',%d)" % (
-        acc_n, t_type, date, amount)
+        accountNumber, actionType, date, amount)
     cur.execute(insert)
-    qrry = "UPDATE customer_info set balance = balance-%d where (acc_no==%d)" % (
-        amount, acc_n)
-    cur.execute(qrry)
+    qry = "UPDATE customer_info set balance = balance-%d where (acc_no==%d)" % (
+        amount, accountNumber)
+    cur.execute(qry)
     if cur.rowcount > 0:
         print(" "*35+"!!!!!Transaction Completed!!!!!")
     else:
@@ -82,15 +82,15 @@ def withdrawMoney():
 
 # Deposite Money to account
 def depositeMoney():
-    acc_n = int(input("Enter account no :"))
-    trn_type = 'Deposite'
+    accountNumber = int(input("Enter account no :"))
+    actionType = 'Deposite'
     date = str(input("Enter date(YYYY-MM-DD) :"))
     amount = int(input("Enter amount :"))
     insert = "insert into transaction1 values(%d,'%s','%s',%d)" % (
-        acc_n, trn_type, date, amount)
+        accountNumber, actionType, date, amount)
     cur.execute(insert)
     qry = "UPDATE customer_info set balance = balance+%d where (acc_no==%d)" % (
-        amount, acc_n)
+        amount, accountNumber)
     cur.execute(qry)
     if cur.rowcount > 0:
         print(" "*35+"!!!!!Transaction Completed!!!!!")
